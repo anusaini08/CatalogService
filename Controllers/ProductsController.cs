@@ -9,10 +9,12 @@ namespace CatalogService.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IImageService _imageService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IImageService imageService)
         {
             _productService = productService;
+            _imageService = imageService;
         }
 
         [HttpGet]
@@ -28,15 +30,35 @@ namespace CatalogService.Controllers
             return product != null ? Ok(product) : NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddProduct([FromBody] Product product, [FromForm] IFormFile? file)
+        [HttpPost("Image")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
         {
-            var createdProduct = await _productService.AddProductAsync(product, file);
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file provided");
+            }
+
+            var imageUrl = await _imageService.UploadImageAsync(file);
+            return Ok(new { ImageUrl = imageUrl });
+        }
+
+        [HttpGet("Images/{imageName}")]
+        public IActionResult GetImageUrl(string imageName)
+        {
+            var imageUrl = _imageService.GetImageUrl(imageName);
+            return Ok(new { ImageUrl = imageUrl });
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct([FromBody] ProductDto product)
+        {
+            var createdProduct = await _productService.AddProductAsync(product);
             return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.Id }, createdProduct);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product updatedProduct)
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] ProductDto updatedProduct)
         {
             var result = await _productService.UpdateProductAsync(id, updatedProduct);
             return result ? NoContent() : NotFound();

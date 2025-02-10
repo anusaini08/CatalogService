@@ -22,14 +22,23 @@ namespace CatalogService.DataContext
             return await _dbContext.Products.FindAsync(id);
         }
 
-        public async Task<Product> AddProductAsync(Product product)
+        public async Task<Product> AddProductAsync(ProductDto productDto)
         {
+            var product = new Product
+            {
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                ImageUrl = productDto.ImageUrl // Set if available
+            };
+
             _dbContext.Products.Add(product);
             await _dbContext.SaveChangesAsync();
             return product;
         }
 
-        public async Task<bool> UpdateProductAsync(int id, Product updatedProduct)
+        public async Task<bool> UpdateProductAsync(int id, ProductDto updatedProduct)
         {
             var product = await _dbContext.Products.FindAsync(id);
             if (product == null) return false;

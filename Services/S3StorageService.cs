@@ -3,12 +3,12 @@ using Amazon.S3.Model;
 
 namespace CatalogService.Services
 {
-    public class S3Service : IS3Service
+    public class S3StorageService : IStorageService
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
 
-        public S3Service(IAmazonS3 s3Client, IConfiguration configuration)
+        public S3StorageService(IAmazonS3 s3Client, IConfiguration configuration)
         {
             _s3Client = s3Client;
             _bucketName = configuration["AWS:BucketName"];

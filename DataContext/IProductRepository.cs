@@ -6,8 +6,8 @@ namespace CatalogService.DataContext
     {
         Task<IEnumerable<Product>> GetProductsAsync();
         Task<Product?> GetProductByIdAsync(int id);
-        Task<Product> AddProductAsync(Product product);
-        Task<bool> UpdateProductAsync(int id, Product updatedProduct);
+        Task<Product> AddProductAsync(ProductDto product);
+        Task<bool> UpdateProductAsync(int id, ProductDto updatedProduct);
         Task<bool> DeleteProductAsync(int id);
     }
 }
