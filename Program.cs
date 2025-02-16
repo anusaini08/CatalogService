@@ -15,17 +15,9 @@ builder.Configuration
 // Add services to the container.
 
 builder.Services.AddControllers();
-
-// Read environment variables in Elastic Beanstalk
-var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
-
-if (string.IsNullOrEmpty(connectionString))
-{
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-}
 // Add Database Context
 builder.Services.AddDbContext<CatalogDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // AWS Services Configuration
 builder.Services.AddAWSService<IAmazonS3>();
