@@ -40,6 +40,7 @@ builder.Services.AddScoped<IImageService, ImageService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -54,7 +55,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 
