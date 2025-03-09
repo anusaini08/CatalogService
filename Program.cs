@@ -3,7 +3,6 @@ using Amazon.CloudWatch;
 using CatalogService.DataContext;
 using CatalogService.Services;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +16,9 @@ builder.Configuration
 builder.Services.AddControllers();
 // Add Database Context
 builder.Services.AddDbContext<CatalogDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+    new MySqlServerVersion(new Version())
+    ));
 
 // AWS Services Configuration
 builder.Services.AddAWSService<IAmazonS3>();
